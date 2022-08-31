@@ -20,6 +20,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
+import com.pedro_bruno.pokedexwithcompose.components.CardPokemon
 import com.pedro_bruno.pokedexwithcompose.components.PokedexAppBar
 import com.pedro_bruno.pokedexwithcompose.components.SearchInput
 import com.pedro_bruno.pokedexwithcompose.navigation.PokedexScreens
@@ -43,7 +44,7 @@ fun HomeScreen(navController: NavController) {
                 .fillMaxSize(),
             color = Color(0xFFF6F6F6)
         ) {
-            Column() {
+            Column {
                 Surface(
                     shape = RoundedCornerShape(
                         bottomStartPercent = 20,
@@ -62,8 +63,8 @@ fun HomeScreen(navController: NavController) {
                         }
                     )
                 }
-
-
+                Spacer(modifier = Modifier.padding(20.dp))
+                CardPokemon()
             }
         }
     }
