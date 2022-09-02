@@ -4,5 +4,5 @@ import com.pedro_bruno.pokedexwithcompose.data_remote.model.PokemonListResponse
 import kotlinx.coroutines.flow.Flow
 
 interface PokemonRemoteDataSource {
-   suspend fun getAllPokemons():PokemonListResponse?
+    fun getAllPokemons():Flow<PokemonListResponse>
 }

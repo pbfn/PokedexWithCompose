@@ -13,9 +13,7 @@ import com.pedro_bruno.pokedexwithcompose.domain.repositories.PokemonRepository
 import com.pedro_bruno.pokedexwithcompose.domain.usecase.GetAllPokemonsUseCase
 import com.pedro_bruno.pokedexwithcompose.utils.Resource
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
 
 
 class HomeViewModel(
@@ -32,11 +30,9 @@ class HomeViewModel(
 
     private fun getAllPokemons() {
         viewModelScope.launch(Dispatchers.Default) {
-            _listPokemon = Resource.Loading()
             getAllPokemonsUseCase(
                 onSuccess = {
-                    if (it != null)
-                        _listPokemon =Resource.Success(it)
+                    _listPokemon =Resource.Success(it)
                 },
                 onError = {
                     Log.d("getAllPokemons", "getAllPokemons: ${it.message.toString()}")

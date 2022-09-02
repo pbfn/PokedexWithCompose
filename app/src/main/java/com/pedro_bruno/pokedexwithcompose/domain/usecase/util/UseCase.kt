@@ -3,24 +3,28 @@ package com.pedro_bruno.pokedexwithcompose.domain.usecase.util
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 
 abstract class UseCase<in Params,out T>(
     private val scope: CoroutineScope
 ){
-    abstract suspend fun run(params:Params?=null): T
+    abstract fun run(params:Params?=null): Flow<T>
 
     operator fun invoke(
         params: Params,
         onSuccess:(T) -> Unit = {},
         onError: (Throwable) -> Unit = {}
     ){
-        scope.launch(Dispatchers.Default) {
+        scope.launch(Dispatchers.IO) {
 
             try {
-                onSuccess.invoke(run(params = params))
-
+                run(params = params).collect {
+                    withContext(Dispatchers.Main){
+                        onSuccess.invoke(it)
+                    }
+                }
             }catch (err:Exception){
                 withContext(Dispatchers.Main){
                     onError.invoke(err)

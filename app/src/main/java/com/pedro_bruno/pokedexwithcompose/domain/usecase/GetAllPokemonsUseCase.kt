@@ -9,14 +9,14 @@ import kotlinx.coroutines.flow.Flow
 class GetAllPokemonsUseCase(
     private val pokemonRepository: PokemonRepository,
     scope: CoroutineScope
-) : UseCase<GetAllPokemonsUseCase.Params, PokemonListResponse?>(scope = scope) {
+) : UseCase<GetAllPokemonsUseCase.Params, PokemonListResponse>(scope = scope) {
 
 
     data class Params(
         val query: String? = null
     )
 
-    override suspend fun run(params: Params?): PokemonListResponse? {
+    override fun run(params: Params?): Flow<PokemonListResponse> {
         return pokemonRepository.getAllPokemon()
     }
 

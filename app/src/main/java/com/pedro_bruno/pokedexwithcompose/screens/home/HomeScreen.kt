@@ -4,6 +4,7 @@ import android.util.Log
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardActions
+import androidx.compose.material.LinearProgressIndicator
 import androidx.compose.material.Scaffold
 import androidx.compose.material.Surface
 import androidx.compose.material.icons.Icons
@@ -65,16 +66,18 @@ fun HomeScreen(navController: NavController) {
                 Spacer(modifier = Modifier.padding(20.dp))
                 when (viewModel._listPokemon) {
                     is Resource.Loading -> {
+                        LinearProgressIndicator()
                         Log.d("TesteResource", "HomeScreen: Loading")
                     }
                     is Resource.Success -> {
+                        CardPokemon()
                         Log.d("TesteResource", "HomeScreen: Success")
                     }
                     is Resource.Error -> {
                         Log.d("TesteResource", "HomeScreen: Error")
                     }
                 }
-                CardPokemon()
+
             }
         }
     }
