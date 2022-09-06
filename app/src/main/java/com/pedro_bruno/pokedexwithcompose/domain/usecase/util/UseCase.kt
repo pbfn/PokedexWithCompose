@@ -10,7 +10,7 @@ import kotlinx.coroutines.withContext
 abstract class UseCase<in Params,out T>(
     private val scope: CoroutineScope
 ){
-    abstract fun run(params:Params?=null): Flow<T>
+    abstract fun run(params:Params): Flow<T>
 
     operator fun invoke(
         params: Params,

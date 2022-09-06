@@ -35,7 +35,7 @@ val appModule = module {
     }
 
     viewModel {
-        HomeViewModel(get(),get())
+        HomeViewModel(get())
     }
 
     single {

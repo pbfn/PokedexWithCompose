@@ -2,6 +2,8 @@ package com.pedro_bruno.pokedexwithcompose.screens.home
 
 import android.util.Log
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.material.LinearProgressIndicator
@@ -21,17 +23,16 @@ import androidx.navigation.NavController
 import com.pedro_bruno.pokedexwithcompose.components.CardPokemon
 import com.pedro_bruno.pokedexwithcompose.components.PokedexAppBar
 import com.pedro_bruno.pokedexwithcompose.components.SearchInput
+import com.pedro_bruno.pokedexwithcompose.domain.model.PokemonDetails
 import com.pedro_bruno.pokedexwithcompose.utils.Resource
 import org.koin.androidx.compose.getViewModel
 
 @OptIn(ExperimentalComposeUiApi::class)
 @Composable
-fun HomeScreen(navController: NavController) {
+fun HomeScreen(navController: NavController, viewModel: HomeViewModel) {
 
     val searchInputState = rememberSaveable { mutableStateOf("") }
     val keyboardController = LocalSoftwareKeyboardController.current
-
-    val viewModel = getViewModel<HomeViewModel>()
     Scaffold(topBar = {
         PokedexAppBar(
             backgroundColor = Color.White,
@@ -64,17 +65,17 @@ fun HomeScreen(navController: NavController) {
                     )
                 }
                 Spacer(modifier = Modifier.padding(20.dp))
-                when (viewModel._listPokemon) {
+                when (viewModel.listPokemon) {
                     is Resource.Loading -> {
                         LinearProgressIndicator()
-                        Log.d("TesteResource", "HomeScreen: Loading")
+                        Log.d("HomeScreen", "HomeScreen: Loading")
                     }
                     is Resource.Success -> {
-                        CardPokemon()
-                        Log.d("TesteResource", "HomeScreen: Success")
+                        Log.d("HomeScreen", "HomeScreen: Success")
+                        ListPokemon(listPokemon = viewModel.listPokemon.data?.toList() ?: listOf())
                     }
                     is Resource.Error -> {
-                        Log.d("TesteResource", "HomeScreen: Error")
+                        Log.d("HomeScreen", "HomeScreen: Error")
                     }
                 }
 
@@ -85,4 +86,20 @@ fun HomeScreen(navController: NavController) {
 
 fun onSearch(query: String) {
     Log.d("onSearch", "onSearch: $query")
+}
+
+@Composable
+fun ListPokemon(listPokemon: List<PokemonDetails>) {
+
+    LazyColumn(
+        modifier = Modifier
+            .fillMaxWidth()
+            .fillMaxHeight(),
+        contentPadding = PaddingValues(16.dp)
+    ) {
+        items(items = listPokemon) { pokemon ->
+            CardPokemon(pokemon = pokemon)
+        }
+    }
+
 }

@@ -28,6 +28,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import coil.compose.rememberImagePainter
+import com.pedro_bruno.pokedexwithcompose.domain.model.PokemonDetails
 
 @Composable
 fun PokedexAppBar(
@@ -118,11 +119,11 @@ fun SearchInput(
     )
 }
 
-@Preview
 @Composable
 fun CardPokemon(
+    pokemon: PokemonDetails
 ) {
-    val listTypes = listOf("Grass","Poison","Metal")
+    val listTypes = listOf("Grass", "Poison", "Metal")
     Card(
         modifier = Modifier
             .padding(horizontal = 24.dp, vertical = 8.dp)
@@ -133,10 +134,10 @@ fun CardPokemon(
         Row(Modifier.padding(12.dp)) {
             Column() {
                 Text(text = "#001", style = TextStyle(color = Color.White, fontSize = 10.sp))
-                Text(text = "Bulbasaur", style = TextStyle(color = Color.White, fontSize = 16.sp))
+                Text(text = pokemon.name, style = TextStyle(color = Color.White, fontSize = 16.sp))
                 Spacer(modifier = Modifier.height(10.dp))
                 Row {
-                    for (type in listTypes){
+                    for (type in pokemon.listTypes) {
                         TypePokemon(type = type)
                         Spacer(modifier = Modifier.width(20.dp))
                     }
@@ -145,7 +146,7 @@ fun CardPokemon(
             Spacer(modifier = Modifier.fillMaxWidth(0.6f))
             Row {
                 Image(
-                    painter = rememberImagePainter(data = "https://cdn.traction.one/pokedex/pokemon/1.png"),
+                    painter = rememberImagePainter(data = pokemon.urlImage),
                     contentDescription = "pokemon",
                     modifier = Modifier
                         .height(60.dp)

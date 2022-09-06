@@ -5,7 +5,9 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import com.pedro_bruno.pokedexwithcompose.screens.home.HomeScreen
+import com.pedro_bruno.pokedexwithcompose.screens.home.HomeViewModel
 import com.pedro_bruno.pokedexwithcompose.screens.stats.StatsScreen
+import org.koin.androidx.compose.getViewModel
 
 @Composable
 fun PokedexNavigation() {
@@ -14,7 +16,8 @@ fun PokedexNavigation() {
     NavHost(navController = navController, startDestination = PokedexScreens.HomeScreen.name) {
 
         composable(PokedexScreens.HomeScreen.name) {
-            HomeScreen(navController = navController)
+            val viewModel = getViewModel<HomeViewModel>()
+            HomeScreen(navController = navController, viewModel = viewModel)
         }
 
         composable(PokedexScreens.StatsScreen.name) {

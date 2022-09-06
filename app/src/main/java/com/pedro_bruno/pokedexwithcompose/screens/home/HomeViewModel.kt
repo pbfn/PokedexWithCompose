@@ -4,57 +4,43 @@ import android.util.Log
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import androidx.lifecycle.viewModelScope
-import com.pedro_bruno.pokedexwithcompose.data_remote.model.PokemonListResponse
-import com.pedro_bruno.pokedexwithcompose.domain.repositories.PokemonRepository
+import com.pedro_bruno.pokedexwithcompose.domain.model.PokemonDetails
 import com.pedro_bruno.pokedexwithcompose.domain.usecase.GetAllPokemonsUseCase
 import com.pedro_bruno.pokedexwithcompose.utils.Resource
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.launch
+import kotlinx.coroutines.*
 
 
 class HomeViewModel(
     private val getAllPokemonsUseCase: GetAllPokemonsUseCase,
-    private val repository: PokemonRepository
 ) : ViewModel() {
 
-    var _listPokemon: Resource<PokemonListResponse> by mutableStateOf(Resource.Loading())
-//    val listPokemon = _listPokemon as LiveData<Resource<PokemonListResponse>>
+    var listPokemon: Resource<List<PokemonDetails>> by mutableStateOf(Resource.Loading())
+
+    private var limit = 20
+    private val offset = 0
 
     init {
         getAllPokemons()
     }
 
-    private fun getAllPokemons() {
-        viewModelScope.launch(Dispatchers.Default) {
-            getAllPokemonsUseCase(
-                onSuccess = {
-                    _listPokemon =Resource.Success(it)
-                },
-                onError = {
-                    Log.d("getAllPokemons", "getAllPokemons: ${it.message.toString()}")
-                },
-                params = GetAllPokemonsUseCase.Params()
+    fun getAllPokemons() {
+        getAllPokemonsUseCase(
+            onSuccess = { response ->
+                if (response.isNotEmpty()) {
+                    listPokemon = Resource.Success(response)
+                }
+                Log.d("HomeViewModel", "getAllPokemons: ${response.size}")
+            },
+            onError = {
+                Log.d("HomeViewModel", "getAllPokemons: ${it.message.toString()}")
+                listPokemon = Resource.Error(it.message)
+            },
+            params = GetAllPokemonsUseCase.Params(
+                limit = limit,
+                offset = offset
             )
-        }
+        )
 
     }
-
-//    private fun teste(){
-//        viewModelScope.launch(Dispatchers.Default) {
-//            _listPokemon.postValue(Resource.Loading())
-//            try {
-//               repository.getAllPokemon().collect {
-//                    _listPokemon.postValue(Resource.Success(it))
-//                }
-//            }catch (err:Exception){
-//
-//            }
-//
-//        }
-//    }
-
 }
