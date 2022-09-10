@@ -64,7 +64,7 @@ fun HomeScreen(navController: NavController, viewModel: HomeViewModel) {
                         }
                     )
                 }
-                Spacer(modifier = Modifier.padding(20.dp))
+
                 when (viewModel.listPokemon) {
                     is Resource.Loading -> {
                         LinearProgressIndicator()
@@ -94,8 +94,7 @@ fun ListPokemon(listPokemon: List<PokemonDetails>) {
     LazyColumn(
         modifier = Modifier
             .fillMaxWidth()
-            .fillMaxHeight(),
-        contentPadding = PaddingValues(16.dp)
+            .fillMaxHeight()
     ) {
         items(items = listPokemon) { pokemon ->
             CardPokemon(pokemon = pokemon)

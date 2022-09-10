@@ -1,6 +1,5 @@
 package com.pedro_bruno.pokedexwithcompose.components
 
-import android.graphics.drawable.Icon
 import androidx.compose.foundation.*
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -16,7 +15,6 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.MutableState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.platform.LocalContext
@@ -119,21 +117,31 @@ fun SearchInput(
     )
 }
 
+@Preview
 @Composable
 fun CardPokemon(
-    pokemon: PokemonDetails
+    pokemon: PokemonDetails = PokemonDetails(
+        1,
+        "Teste",
+        "",
+        listOf("Grass", "Poison"),
+        primaryColor = Color(0xFF48D0B0)
+    )
 ) {
-    val listTypes = listOf("Grass", "Poison", "Metal")
     Card(
         modifier = Modifier
             .padding(horizontal = 24.dp, vertical = 8.dp)
             .fillMaxWidth(),
         shape = RoundedCornerShape(20),
-        backgroundColor = Color(0xFF48D0B0)
+        //backgroundColor = Color(0xFF48D0B0)
+        backgroundColor = pokemon.primaryColor
     ) {
         Row(Modifier.padding(12.dp)) {
             Column() {
-                Text(text = "#001", style = TextStyle(color = Color.White, fontSize = 10.sp))
+                Text(
+                    text = pokemon.getFormatID(),
+                    style = TextStyle(color = Color.White, fontSize = 10.sp)
+                )
                 Text(text = pokemon.name, style = TextStyle(color = Color.White, fontSize = 16.sp))
                 Spacer(modifier = Modifier.height(10.dp))
                 Row {
@@ -143,7 +151,9 @@ fun CardPokemon(
                     }
                 }
             }
-            Spacer(modifier = Modifier.fillMaxWidth(0.6f))
+            Spacer(
+                modifier = Modifier.fillMaxWidth(if (pokemon.listTypes.size == 2) 0.6f else 0.7f)
+            )
             Row {
                 Image(
                     painter = rememberImagePainter(data = pokemon.urlImage),
@@ -152,7 +162,7 @@ fun CardPokemon(
                         .height(60.dp)
                         .width(60.dp)
                 )
-                Spacer(modifier = Modifier.height(10.dp))
+
                 Icon(
                     imageVector = Icons.Default.FavoriteBorder,
                     contentDescription = "Favorite",
