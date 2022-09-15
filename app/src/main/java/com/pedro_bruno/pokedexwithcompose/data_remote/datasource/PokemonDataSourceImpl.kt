@@ -33,8 +33,17 @@ class PokemonDataSourceImpl(
             }
         }
 
+    override suspend fun getDetailsPokemon(idPokemon: String): Flow<PokemonDetails> = flow {
+        val response = pokemonService.getDetailsPokemon(nameOrIdPokemon = idPokemon)
+        if (response.isSuccessful){
+            response.body()?.let {
+                emit(it.toDomain())
+            }
+        }
+    }
+
     private suspend fun getDetailPokemon(name: String): PokemonDetails? {
-        val response = pokemonService.getDetailsPokemon(namePokemon = name)
+        val response = pokemonService.getDetailsPokemon(nameOrIdPokemon = name)
         if (response.isSuccessful) {
             return response.body().let {
                 it!!.toDomain()

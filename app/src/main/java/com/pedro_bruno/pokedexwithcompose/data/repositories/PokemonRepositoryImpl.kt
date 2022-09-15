@@ -10,8 +10,14 @@ class PokemonRepositoryImpl(
     private val pokemonRemoteDataSource: PokemonRemoteDataSource
 ) : PokemonRepository {
 
-    override fun getAllPokemon(limit: Int, offset: Int): Flow<List<PokemonDetails>>  = flow {
+    override fun getAllPokemon(limit: Int, offset: Int): Flow<List<PokemonDetails>> = flow {
         pokemonRemoteDataSource.getAllPokemons(limit = limit, offset = offset).collect {
+            emit(it)
+        }
+    }
+
+    override fun getDetailsPokemon(idPokemon: String): Flow<PokemonDetails> = flow {
+        pokemonRemoteDataSource.getDetailsPokemon(idPokemon = idPokemon).collect {
             emit(it)
         }
     }

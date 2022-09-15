@@ -24,6 +24,7 @@ import com.pedro_bruno.pokedexwithcompose.components.CardPokemon
 import com.pedro_bruno.pokedexwithcompose.components.PokedexAppBar
 import com.pedro_bruno.pokedexwithcompose.components.SearchInput
 import com.pedro_bruno.pokedexwithcompose.domain.model.PokemonDetails
+import com.pedro_bruno.pokedexwithcompose.navigation.PokedexScreens
 import com.pedro_bruno.pokedexwithcompose.utils.Resource
 import org.koin.androidx.compose.getViewModel
 
@@ -72,7 +73,10 @@ fun HomeScreen(navController: NavController, viewModel: HomeViewModel) {
                     }
                     is Resource.Success -> {
                         Log.d("HomeScreen", "HomeScreen: Success")
-                        ListPokemon(listPokemon = viewModel.listPokemon.data?.toList() ?: listOf())
+                        ListPokemon(
+                            listPokemon = viewModel.listPokemon.data?.toList() ?: listOf(),
+                            navController = navController
+                        )
                     }
                     is Resource.Error -> {
                         Log.d("HomeScreen", "HomeScreen: Error")
@@ -89,7 +93,7 @@ fun onSearch(query: String) {
 }
 
 @Composable
-fun ListPokemon(listPokemon: List<PokemonDetails>) {
+fun ListPokemon(listPokemon: List<PokemonDetails>, navController: NavController) {
 
     LazyColumn(
         modifier = Modifier
@@ -97,7 +101,9 @@ fun ListPokemon(listPokemon: List<PokemonDetails>) {
             .fillMaxHeight()
     ) {
         items(items = listPokemon) { pokemon ->
-            CardPokemon(pokemon = pokemon)
+            CardPokemon(pokemon = pokemon) { id ->
+                navController.navigate(PokedexScreens.StatsScreen.name + "/$id")
+            }
         }
     }
 

@@ -13,20 +13,27 @@ import androidx.compose.material.icons.filled.FavoriteBorder
 import androidx.compose.material.icons.filled.Search
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.MutableState
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import coil.compose.rememberImagePainter
 import com.pedro_bruno.pokedexwithcompose.domain.model.PokemonDetails
+import com.pedro_bruno.pokedexwithcompose.domain.model.StatPokemon
+import com.pedro_bruno.pokedexwithcompose.utils.Mocks
 
 @Composable
 fun PokedexAppBar(
@@ -117,24 +124,19 @@ fun SearchInput(
     )
 }
 
-@Preview
+//@Preview
 @Composable
 fun CardPokemon(
-    pokemon: PokemonDetails = PokemonDetails(
-        1,
-        "Teste",
-        "",
-        listOf("Grass", "Poison"),
-        primaryColor = Color(0xFF48D0B0)
-    )
+    pokemon: PokemonDetails = Mocks.mockPokemon,
+    onClick: (String) -> Unit = {}
 ) {
     Card(
         modifier = Modifier
             .padding(horizontal = 24.dp, vertical = 8.dp)
-            .fillMaxWidth(),
+            .fillMaxWidth()
+            .clickable { onClick(pokemon.id.toString()) },
         shape = RoundedCornerShape(20),
-        //backgroundColor = Color(0xFF48D0B0)
-        backgroundColor = pokemon.primaryColor
+        backgroundColor = pokemon.primaryColor,
     ) {
         Row(Modifier.padding(12.dp)) {
             Column() {
@@ -178,7 +180,7 @@ fun CardPokemon(
 }
 
 
-@Preview
+//@Preview
 @Composable
 fun TypePokemon(type: String = "Poison") {
     Card(
@@ -200,4 +202,54 @@ fun TypePokemon(type: String = "Poison") {
     }
 
 
+}
+
+@Preview
+@Composable
+fun RowStats(stat: StatPokemon = StatPokemon("Special-defense", 0)) {
+    Row(
+        verticalAlignment = Alignment.CenterVertically
+    ) {
+        Text(text = stat.name, modifier = Modifier.width(150.dp), fontSize = 16.sp)
+        Text(text = stat.base_stat.toString( ), modifier = Modifier.width(50.dp), fontSize = 24.sp)
+        Row(
+            modifier = Modifier
+                .padding(3.dp)
+                .fillMaxWidth()
+                .height(10.dp)
+                .border(
+                    width = 0.dp,
+                    shape = RoundedCornerShape(10.dp),
+                    color = Color.Transparent
+                )
+                .clip(
+                    RoundedCornerShape(
+                        topStartPercent = 50,
+                        topEndPercent = 50,
+                        bottomStartPercent = 50,
+                        bottomEndPercent = 50
+                    )
+                )
+                .background(Color(0xFFF6F6F6)),
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+            Button(
+                contentPadding = PaddingValues(1.dp),
+                onClick = { },
+                modifier = Modifier
+                    .fillMaxWidth(
+                        ((stat.base_stat.toFloat() / 100.0).toFloat())
+                    )
+                    .background(if (stat.base_stat == 0) Color.Transparent else stat.backgroundColor),
+                enabled = false,
+                elevation = null,
+                colors = ButtonDefaults.buttonColors(
+                    backgroundColor = Color.Transparent,
+                    disabledBackgroundColor = Color.Transparent
+                )
+            ) {
+
+            }
+        }
+    }
 }

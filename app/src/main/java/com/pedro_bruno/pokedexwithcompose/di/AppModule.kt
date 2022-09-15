@@ -8,7 +8,9 @@ import com.pedro_bruno.pokedexwithcompose.data_remote.utils.ApiConstants.BASE_UR
 import com.pedro_bruno.pokedexwithcompose.data_remote.utils.WebServiceFactory
 import com.pedro_bruno.pokedexwithcompose.domain.repositories.PokemonRepository
 import com.pedro_bruno.pokedexwithcompose.domain.usecase.GetAllPokemonsUseCase
+import com.pedro_bruno.pokedexwithcompose.domain.usecase.GetDetailPokemonUseCase
 import com.pedro_bruno.pokedexwithcompose.screens.home.HomeViewModel
+import com.pedro_bruno.pokedexwithcompose.screens.stats.StatsViewModel
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import org.koin.androidx.viewmodel.dsl.viewModel
@@ -37,9 +39,13 @@ val appModule = module {
     viewModel {
         HomeViewModel(get())
     }
+    viewModel {
+        StatsViewModel(get())
+    }
 
     single {
         CoroutineScope(Dispatchers.IO)
     }
     factory { GetAllPokemonsUseCase(get(), get()) }
+    factory { GetDetailPokemonUseCase(get(), get()) }
 }

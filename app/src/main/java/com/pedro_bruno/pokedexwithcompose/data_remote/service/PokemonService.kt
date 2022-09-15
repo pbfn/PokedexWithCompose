@@ -17,10 +17,10 @@ interface PokemonService {
         offset: Int = 0
     ): Response<PokemonListResponse>
 
-    @GET("pokemon/{namePokemon}")
+    @GET("pokemon/{nameOrIdPokemon}")
     suspend fun getDetailsPokemon(
-        @Path("namePokemon")
-        namePokemon: String
+        @Path("nameOrIdPokemon")
+        nameOrIdPokemon: String
     ): Response<PokemonDetailsResponse>
 
 }
